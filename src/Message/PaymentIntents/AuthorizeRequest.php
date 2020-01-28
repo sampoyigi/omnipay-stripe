@@ -3,6 +3,7 @@
 /**
  * Stripe Payment Intents Authorize Request.
  */
+
 namespace Omnipay\Stripe\Message\PaymentIntents;
 
 use Money\Formatter\DecimalMoneyFormatter;
@@ -202,7 +203,6 @@ class AuthorizeRequest extends AbstractRequest
         return $this->setParameter('onBehalfOf', $value);
     }
 
-
     /**
      * @return string
      * @throws \Omnipay\Common\Exception\InvalidRequestException
@@ -231,7 +231,7 @@ class AuthorizeRequest extends AbstractRequest
         $money = $this->getMoney('applicationFee');
 
         if ($money !== null) {
-            return (integer) $money->getAmount();
+            return (integer)$money->getAmount();
         }
 
         return 0;
@@ -262,7 +262,7 @@ class AuthorizeRequest extends AbstractRequest
      */
     public function setStatementDescriptor($value)
     {
-        $value = str_replace(array('<', '>', '"', '\''), '', $value);
+        $value = str_replace(['<', '>', '"', '\''], '', $value);
 
         return $this->setParameter('statementDescriptor', $value);
     }
@@ -293,7 +293,7 @@ class AuthorizeRequest extends AbstractRequest
     {
         $this->validate('amount', 'currency');
 
-        $data = array();
+        $data = [];
 
         $data['amount'] = $this->getAmountInteger();
         $data['currency'] = strtolower($this->getCurrency());
@@ -312,7 +312,7 @@ class AuthorizeRequest extends AbstractRequest
         }
 
         if ($this->getApplicationFee()) {
-            $data['application_fee'] = $this->getApplicationFeeInteger();
+            $data['application_fee_amount'] = $this->getApplicationFeeInteger();
         }
 
         if ($this->getTransferGroup()) {
@@ -325,16 +325,20 @@ class AuthorizeRequest extends AbstractRequest
 
         if ($this->getPaymentMethod()) {
             $data['payment_method'] = $this->getPaymentMethod();
-        } elseif ($this->getSource()) {
+        }
+        elseif ($this->getSource()) {
             $data['payment_method'] = $this->getSource();
-        } elseif ($this->getCardReference()) {
+        }
+        elseif ($this->getCardReference()) {
             $data['payment_method'] = $this->getCardReference();
-        } elseif ($this->getToken()) {
+        }
+        elseif ($this->getToken()) {
             $data['payment_method_data'] = [
                 'type' => 'card',
                 'card' => ['token' => $this->getToken()],
             ];
-        } else {
+        }
+        else {
             // one of cardReference, token, or card is required
             $this->validate('paymentMethod');
         }
