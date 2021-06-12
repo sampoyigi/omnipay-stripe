@@ -6,6 +6,8 @@
 
 namespace Omnipay\Stripe;
 
+use Omnipay\Stripe\Message\PaymentIntents\Response;
+
 /**
  * Stripe Payment Intents Gateway.
  *
@@ -79,6 +81,17 @@ class PaymentIntentsGateway extends AbstractGateway
     {
         return $this->createRequest('\Omnipay\Stripe\Message\PaymentIntents\CancelPaymentIntentRequest', $parameters);
     }
+    
+    /**
+     * Create a Payment Intent.
+     *
+     * @param array $parameters
+     * @return \Omnipay\Stripe\Message\PaymentIntents\CreatePaymentIntentRequest
+     */
+    public function create(array $parameters = array())
+    {
+        return $this->createRequest('\Omnipay\Stripe\Message\PaymentIntents\CreatePaymentIntentRequest', $parameters);
+    }    
 
     /**
      * @inheritdoc
